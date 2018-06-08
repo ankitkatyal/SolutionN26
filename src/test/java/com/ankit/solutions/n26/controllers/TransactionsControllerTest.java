@@ -51,7 +51,7 @@ public class TransactionsControllerTest {
 	@Test
 	public void shouldValidateRequest() throws Exception {
 		mvc.perform(post("/api/transactions").contentType("application/json").content("{\"timestamp\": 0}"))
-				.andExpect(status().isNoContent()).andExpect(content().bytes(new byte[0]));
+				.andExpect(status().isBadRequest()).andExpect(content().bytes(new byte[0]));
 
 		verifyZeroInteractions(transactionService);
 	}
@@ -61,7 +61,8 @@ public class TransactionsControllerTest {
 		doThrow(new InvalidTimestampException("")).when(transactionService).loadTransactions(any(Transaction.class));
 
 		mvc.perform(post("/api/transactions").contentType("application/json")
-				.content("{\"amount\": 12.3,\"timestamp\": 1528440523195}")).andExpect(status().isNoContent())
+				.content("{\"amount\": 12.3,\"timestamp\": 0}")).andExpect(status().isNoContent())
 				.andExpect(content().bytes(new byte[0]));
+		verify(transactionService).register(ImmutableTransaction.of(12.3, 1478192204000L));
 	}
 }
