@@ -24,6 +24,7 @@ import com.ankit.solutions.n26.services.TransactionService;
 import com.ankit.solutions.n26.validations.InsideTimeValidator;
 
 
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(TransactionsController.class)
 public class TransactionsControllerTest {
@@ -63,6 +64,6 @@ public class TransactionsControllerTest {
 		mvc.perform(post("/api/transactions").contentType("application/json")
 				.content("{\"amount\": 12.3,\"timestamp\": 0}")).andExpect(status().isNoContent())
 				.andExpect(content().bytes(new byte[0]));
-		verify(transactionService).register(ImmutableTransaction.of(12.3, 1478192204000L));
+		verify(transactionService).loadTransactions(ImmutableTransaction.of(12.3, 1478192204000L));
 	}
 }
